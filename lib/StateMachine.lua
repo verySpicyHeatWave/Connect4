@@ -10,6 +10,10 @@
 -- -- It is expect the init function, when called, will return a table with
 -- -- Render, Update, Enter and Exit methods.
 --
+-- -- NOTE: I added mousepressed and keypressed methods to the state machine
+-- -- so that those keys could be sent over to the individual states to handle.
+-- -- 														-- B. Cobb, 2024-02-22
+--
 -- gStateMachine = StateMachine {
 -- 		['MainMenu'] = function()
 -- 			return MainMenu()
@@ -39,7 +43,9 @@ function StateMachine:init(states)
 		render = function() end,
 		update = function() end,
 		enter = function() end,
-		exit = function() end
+		exit = function() end,
+		mousepressed = function() end,
+		keypressed = function() end
 	}
 	self.states = states or {} -- [name] -> [function that returns states]
 	self.current = self.empty
@@ -58,4 +64,13 @@ end
 
 function StateMachine:render()
 	self.current:render()
+end
+
+function StateMachine:mousepressed(x, y, button)
+	self.current:mousepressed(x, y, button)
+end
+
+
+function StateMachine:keypressed(key)
+	self.current:keypressed(key)
 end
