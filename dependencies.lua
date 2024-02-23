@@ -6,3 +6,5 @@ require 'class/Space'
 
 require 'states/BaseState'
 require 'states/PlayState'
+require 'states/MainMenu'
+--require 'states/PlayerSelect'

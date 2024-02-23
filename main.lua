@@ -29,19 +29,24 @@ function love.load()
         resizable = true
     })
 
-    font = love.graphics.newFont('lib/cartoon.ttf', 75)
-    love.graphics.setFont(font)
+    smallfont = love.graphics.newFont('lib/cartoon.ttf', 50)
+    normalfont = love.graphics.newFont('lib/cartoon.ttf', 75)
+    titlefont = love.graphics.newFont('lib/cartoon.ttf', 150)
+    love.graphics.setFont(normalfont)
 
-    love.window.setTitle('Connect Four!')
+    love.window.setTitle('Connect Four')
 
     gameState = StateMachine {        
-        ['play'] = function() return PlayState() end
+        ['play'] = function() return PlayState() end,
+        ['menu'] = function() return MainMenu() end
     }
-    gameState:change('play')
-
-
+    gameState:change('menu')
 end
 
+
+function love.resize(w, h)
+    push:resize(w, h)
+end
 
 
 function love.update(dt) 

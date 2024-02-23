@@ -1,5 +1,11 @@
 PlayState = Class{__includes = BaseState}
 
+--self.players = {}
+
+function PlayState:enter(enterParams)
+    --self.players = enterParams
+end
+
 
 function PlayState:init()
     self.grid = {}
@@ -14,8 +20,6 @@ function PlayState:init()
             self.grid[i][j] = Space(i, j, CELL_SIZE)
         end
     end
-
-
 end
 
 
@@ -81,6 +85,9 @@ end
 
 
 function PlayState:keypressed(key)
+    if (key == 'escape') then
+        gameState:change('menu')
+    end
     if (key == 'r') then
         self:resetGame()
     end
@@ -181,6 +188,6 @@ function PlayState:printMessage()
     else
         message = self.players[self.turnCount] .. '\'s turn!'
     end
-    w = font:getWidth(message) / 2
+    w = normalfont:getWidth(message) / 2
     love.graphics.print(message, (WINDOW_WIDTH / 2) - w, 10)
 end
