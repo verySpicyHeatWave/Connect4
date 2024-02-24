@@ -65,17 +65,16 @@ end
 function MainMenu:update(dt)
     self.msx = love.mouse.getX()
     self.msy = love.mouse.getY()
-    love.window.setTitle(self.msx .. "    " .. self.msy)
-
-    if (self.msx < WINDOW_WIDTH / 2 + self.labelWidth / 2 and self.msx > WINDOW_WIDTH / 2 - self.labelWidth / 2) then
-        for i=0,2,1 do
-            if (self.msy > self.options[i]['y'] and self.msy < self.options[i]['y'] + self.labelHeight) then
-                self.options[i]['color'] = {255,0,0,255}
-                self.options[i]['sel'] = true
-            else
-                self.options[i]['color'] = {255,255,255,255}
-                self.options[i]['sel'] = false
-            end
+    lblupperbound = WINDOW_WIDTH / 2 + self.labelWidth / 2
+    lbllowerbound = WINDOW_WIDTH / 2 - self.labelWidth / 2
+    if  (self.msx >= lblupperbound or self.msx <= lbllowerbound) then return end
+    for i=0,2,1 do
+        if (self.msy > self.options[i]['y'] and self.msy < self.options[i]['y'] + self.labelHeight) then
+            self.options[i]['color'] = {255,0,0,255}
+            self.options[i]['sel'] = true
+        else
+            self.options[i]['color'] = {255,255,255,255}
+            self.options[i]['sel'] = false
         end
     end
 end
@@ -98,10 +97,6 @@ function MainMenu:render()
         love.graphics.setColor(self.options[i]['color'])
         love.graphics.print(self.options[i]['text'], self.options[i]['x'], self.options[i]['y'])
     end
-    --write the name of the game
-    --write the options (one player, two player, toggle music)
-    --color the options based on which one is selected
-
 end
 
 
@@ -115,7 +110,7 @@ function MainMenu:mousepressed(x, y, button)
     end
 
     if (selection == 1) then
-        gameState:change('play')
+        gameState:change('select')
     end
 end
 

@@ -1,15 +1,13 @@
 PlayState = Class{__includes = BaseState}
 
---self.players = {}
-
 function PlayState:enter(enterParams)
-    --self.players = enterParams
+    self.players = enterParams or {'red', 'yellow'}
 end
 
 
 function PlayState:init()
     self.grid = {}
-    self.players = {'red', 'yellow'}
+    self.players = {}
     self.turnCount = 1
     self.gameCount = 1
     self.winner = 'none'
@@ -186,7 +184,7 @@ function PlayState:printMessage()
     if (self:gameOver()) then 
         message = self.winner .. ' wins!'
     else
-        message = self.players[self.turnCount] .. '\'s turn!'
+        message = self.players[self.turnCount][1] .. '\'s turn!'
     end
     w = normalfont:getWidth(message) / 2
     love.graphics.print(message, (WINDOW_WIDTH / 2) - w, 10)
