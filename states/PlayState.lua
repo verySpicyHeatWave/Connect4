@@ -1,7 +1,8 @@
 PlayState = Class{__includes = BaseState}
 
 function PlayState:enter(enterParams)
-    self.players = enterParams or {'red', 'yellow'}
+    self.players = enterParams
+    self.cpuplayer = self.players[2][3]
 end
 
 
@@ -11,6 +12,8 @@ function PlayState:init()
     self.turnCount = 1
     self.gameCount = 1
     self.winner = 'none'
+    self.cpuplayer = false
+    self.cpuwaittimer = 0
     
     for i = 1, COLS, 1 do
         self.grid[i] = {}
@@ -31,6 +34,17 @@ function PlayState:update(dt)
         end
         if (self:gameOver()) then break end
     end
+
+    if (self.cpuplayer and self.turnCount == 2) then
+        self.cpuwaittimer = self.cpuwaittimer + dt
+        if (self.cpuwaittimer >= 1.3) then
+            self:easyCPUmove()
+            self.cpuwaittimer = 0
+        end
+    else
+        self.cpuwaittimer = 0   
+    end
+
 end
 
 
@@ -59,6 +73,7 @@ end
 
 function PlayState:mousepressed(x, y, button)
     if (self:gameOver()) then return end
+    if (self.cpuplayer and self.turnCount == 2) then return end
     for i=1, COLS, 1 do
         for j=1, ROWS, 1 do
             if (self.grid[i][j]:isFalling()) then return end
@@ -73,7 +88,7 @@ function PlayState:mousepressed(x, y, button)
     for j = 6, 1, -1 do
         if (not self.grid[xpos][j]:isFilled()) then
             self.grid[xpos][j]:fill(self.players[self.turnCount])
-            self.turnCount = (self.turnCount ) % 2 + 1
+            self.turnCount = (self.turnCount % 2) + 1
             break
         end
     end  
@@ -188,4 +203,18 @@ function PlayState:printMessage()
     end
     w = normalfont:getWidth(message) / 2
     love.graphics.print(message, (WINDOW_WIDTH / 2) - w, 10)
+end
+
+
+
+function PlayState:easyCPUmove()
+    i = math.random(1, 7)
+    for j = 6, 1, -1 do
+        if (not self.grid[i][j]:isFilled()) then
+            self.grid[i][j]:fill(self.players[self.turnCount])
+            self.turnCount = (self.turnCount % 2) + 1
+            break
+        end
+    end  
+
 end
