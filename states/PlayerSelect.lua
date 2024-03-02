@@ -152,9 +152,3 @@ function PlayerSelect:lockInPlayer()
     self.options[2]:setText('ready to play!')
     self.playerName:setText(playername)
 end
-
-
-
-
-
-

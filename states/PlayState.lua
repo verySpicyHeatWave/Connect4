@@ -44,7 +44,6 @@ function PlayState:update(dt)
     else
         self.cpuwaittimer = 0   
     end
-
 end
 
 
@@ -91,8 +90,7 @@ function PlayState:mousepressed(x, y, button)
             self.turnCount = (self.turnCount % 2) + 1
             break
         end
-    end  
-
+    end
 end
 
 
@@ -202,6 +200,7 @@ function PlayState:printMessage()
         message = self.players[self.turnCount][1] .. '\'s turn!'
     end
     w = normalfont:getWidth(message) / 2
+    love.graphics.setFont(normalfont)
     love.graphics.print(message, (WINDOW_WIDTH / 2) - w, 10)
 end
 

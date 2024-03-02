@@ -6,12 +6,6 @@ CELL_SIZE = 180
 WINDOW_WIDTH = CELL_SIZE * 7.5
 WINDOW_HEIGHT = CELL_SIZE * 7
 
-grid = {}
-players = {'red', 'yellow'}
-turnCount = 1
-gameCount = 1
-winner = 'none'
-
 colors = {
     [ 1] = {'red', 16711680},
     [ 2] = {'orange', 16744448},
@@ -32,8 +26,6 @@ colors = {
     todo:
     1) Set up state machine for machine player's difficulty setting
     2) Write different difficulty setting algorithms
-    3) Figure out why some colors, when getting the dimmed version, totally change hue
-    4) Figure out why mouse clicks on the player selects skip multiple colors
 ]]
 
 
@@ -108,16 +100,16 @@ end
 
 function getDimmedColorValue(sum)
     local tsum = sum
-    local lueG = tsum % 256
+    local blueG = tsum % 256
 
     tsum = (tsum - blueG) / 256
     local greenG = tsum % (256)
 
     local redG = (tsum - greenG) / 256
     
-    local newBlue = blueG / 5
-    local newGreen = greenG / 5
-    local newRed = redG / 5
+    local newBlue = math.floor(blueG / 5)
+    local newGreen = math.floor(greenG / 5)
+    local newRed = math.floor(redG / 5)
 
     local resp = newBlue + (newGreen * 256) + (newRed * 256 * 256)
     return resp
