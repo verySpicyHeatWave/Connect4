@@ -33,6 +33,7 @@ colors = {
     1) Set up state machine for machine player's difficulty setting
     2) Write different difficulty setting algorithms
     3) Figure out why some colors, when getting the dimmed version, totally change hue
+    4) Figure out why mouse clicks on the player selects skip multiple colors
 ]]
 
 

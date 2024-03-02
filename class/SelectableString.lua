@@ -33,6 +33,7 @@ end
 
 
 function SelectableString:setText(str)
+    if (not str) then str = "" end
     self.text = str
     if (self.xmode == 'center') then self.x = WINDOW_WIDTH / 2 - (self.font:getWidth(self.text)) / 2 end
 end
