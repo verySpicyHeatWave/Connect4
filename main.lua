@@ -30,10 +30,9 @@ colors = {
 
 --[[
     todo:
-    1) Allow user to choose colors (need state machine to set up menu, I think)
-    2) Create state machine for main menu, 1p vs 2p game
-    3) Set up state machine for machine player's difficulty setting
-    4) Write different difficulty setting algorithms
+    1) Set up state machine for machine player's difficulty setting
+    2) Write different difficulty setting algorithms
+    3) Figure out why some colors, when getting the dimmed version, totally change hue
 ]]
 
 
@@ -95,31 +94,31 @@ end
 
 
 function setColorWith24BitVal(sum)
-    tsum = sum
-    blueG = tsum % 256
+    local tsum = sum
+    local blueG = tsum % 256
 
     tsum = (tsum - blueG) / 256
-    greenG = tsum % (256)
+    local greenG = tsum % (256)
 
-    redG = (tsum - greenG) / 256
+    local redG = (tsum - greenG) / 256
     love.graphics.setColor(love.math.colorFromBytes(redG, greenG, blueG, alpha))
 end
 
 
 function getDimmedColorValue(sum)
-    tsum = sum
-    blueG = tsum % 256
+    local tsum = sum
+    local lueG = tsum % 256
 
     tsum = (tsum - blueG) / 256
-    greenG = tsum % (256)
+    local greenG = tsum % (256)
 
-    redG = (tsum - greenG) / 256
+    local redG = (tsum - greenG) / 256
     
-    newBlue = blueG / 5
-    newGreen = greenG / 5
-    newRed = redG / 5
+    local newBlue = blueG / 5
+    local newGreen = greenG / 5
+    local newRed = redG / 5
 
-    resp = newBlue + (newGreen * 256) + (newRed * 256 * 256)
+    local resp = newBlue + (newGreen * 256) + (newRed * 256 * 256)
     return resp
 end
 

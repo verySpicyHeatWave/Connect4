@@ -68,7 +68,6 @@ function PlayerSelect:update(dt)
     local increaseMinX = WINDOW_WIDTH / 2 + 180
     local minY = WINDOW_HEIGHT / 3 - 95
     local maxY = WINDOW_HEIGHT / 3 - 20
-    local enterMax = 
 
     if (msx < reduceMaxX and msx > reduceMinX) then
         if (msy > minY and msy < maxY) then 
