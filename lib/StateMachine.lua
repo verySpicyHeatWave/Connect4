@@ -45,7 +45,8 @@ function StateMachine:init(states)
 		enter = function() end,
 		exit = function() end,
 		mousepressed = function() end,
-		keypressed = function() end
+		keypressed = function() end,
+		resize = function() end
 	}
 	self.states = states or {} -- [name] -> [function that returns states]
 	self.current = self.empty
@@ -70,7 +71,10 @@ function StateMachine:mousepressed(x, y, button)
 	self.current:mousepressed(x, y, button)
 end
 
-
 function StateMachine:keypressed(key)
 	self.current:keypressed(key)
+end
+
+function StateMachine:resize(w, h)
+	self.current:resize(w, h)
 end

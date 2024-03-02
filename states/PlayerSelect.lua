@@ -17,52 +17,88 @@ function PlayerSelect:init()
     playernumber = 1
     caratsize = titlefont:getWidth('<')
     self.cpuplayer = false
+
+    self.options = {}
+
+    label = "<"
+    x = normalfont:getWidth(label)
+    self.options[0] = {
+        ['text'] = label,
+        ['x'] = (WINDOW_WIDTH / 2 - 180 - caratsize),
+        ['y'] = WINDOW_HEIGHT / 3 - 150,
+        ['color'] = 13,
+        ['sel'] = false,
+        ['font'] = titlefont
+    }
+    
+    label = ">"
+    x = normalfont:getWidth(label)
+    y = normalfont:getHeight()
+    self.options[1] = {
+        ['text'] = label,
+        ['x'] = (WINDOW_WIDTH / 2 + 180),
+        ['y'] = WINDOW_HEIGHT / 3 - 150,
+        ['color'] = 13,
+        ['sel'] = false,
+        ['font'] = titlefont
+    }
+
+    label = "next player"
+    x = normalfont:getWidth(label)
+    self.options[2] = {
+        ['text'] = label,
+        ['x'] = (WINDOW_WIDTH / 2 - x / 2),
+        ['y'] = WINDOW_HEIGHT / 2 + 375,
+        ['color'] = 13,
+        ['sel'] = false,
+        ['font'] = normalfont
+    }
 end
 
 
 
 function PlayerSelect:update(dt)
-    local msx = love.mouse.getX()
-    local msy = love.mouse.getY()
+    
+    local msx, msy = love.mouse.getPosition()
+    msx, msy = push:toGame(msx, msy)
+    if (msx == nil or msy == nil) then return end
     local reduceMaxX   = WINDOW_WIDTH / 2 - 180
     local reduceMinX   = WINDOW_WIDTH / 2 - 180 - caratsize
     local increaseMaxX = WINDOW_WIDTH / 2 + 180 + caratsize
     local increaseMinX = WINDOW_WIDTH / 2 + 180
-    local minY = WINDOW_HEIGHT / 3 - 50
-    local maxY = WINDOW_HEIGHT / 3 + 25
+    local minY = WINDOW_HEIGHT / 3 - 95
+    local maxY = WINDOW_HEIGHT / 3 - 20
+    local enterMax = 
 
     if (msx < reduceMaxX and msx > reduceMinX) then
         if (msy > minY and msy < maxY) then 
-            --love.window.setTitle(msx .. '     ' .. msy .. '     In Range!') -- do the thing
+            love.window.setTitle(msx .. '     ' .. msy .. '     In Range!') -- do the thing
         else            
-            --love.window.setTitle(msx .. '     ' .. msy)
+            love.window.setTitle(msx .. '     ' .. msy)
         end
     elseif (msx < increaseMaxX and msx > increaseMinX) then
         if (msy > minY and msy < maxY) then 
-            --love.window.setTitle(msx .. '     ' .. msy .. '     In Range!') --do the thing
+            love.window.setTitle(msx .. '     ' .. msy .. '     In Range!') --do the thing
         else            
-            --love.window.setTitle(msx .. '     ' .. msy)
+            love.window.setTitle(msx .. '     ' .. msy)
         end
     else
-        --love.window.setTitle(msx .. '     ' .. msy)
+        love.window.setTitle(msx .. '     ' .. msy)
     end
 
     if (self.cpuplayer and playernumber == 2) then
         playername = 'CPU'
     end
-
 end
 
 
 
 function PlayerSelect:render()
-    setColorWith24BitVal(255 + (255*256) + (255*256*256))
+    setColorWith24BitVal(colors[13][2])
     local str = 'Player ' .. playernumber
     love.graphics.setFont(titlefont)
     local x = titlefont:getWidth(str)
     love.graphics.print(str, WINDOW_WIDTH / 2 - x / 2, 50)
-    love.graphics.print('<', WINDOW_WIDTH / 2 - 180 - caratsize, WINDOW_HEIGHT / 3 - 150)
-    love.graphics.print('>', WINDOW_WIDTH / 2 + 180,             WINDOW_HEIGHT / 3 - 150)
 
     if (playername) then
         x = titlefont:getWidth(playername)
@@ -80,6 +116,12 @@ function PlayerSelect:render()
     setColorWith24BitVal(colors[self.sel][2])
     love.graphics.circle('fill', WINDOW_WIDTH / 2, WINDOW_HEIGHT / 3 - 50, 80)
 
+    for i = 0, 2, 1 do
+        love.graphics.setFont(self.options[i]['font'])
+        x = self.options[i]['font']:getWidth(self.options[i]['text'])
+        setColorWith24BitVal(colors[self.options[i]['color']][2])
+        love.graphics.print(self.options[i]['text'], self.options[i]['x'], self.options[i]['y'])
+    end
 end
 
 
@@ -110,6 +152,7 @@ function PlayerSelect:keypressed(key)
             gameState:change('play', playerlist) 
         end
         self:incrementSel()
+        self.options[2]['text'] = 'ready to play!'
     end
 
     --love.window.setTitle(key)
@@ -130,6 +173,11 @@ function PlayerSelect:keypressed(key)
     if (key == 'escape') then
         gameState:change('menu')
     end
+end
+
+
+function PlayerSelect:resize(w, h)
+    push:resize(w, h)
 end
 
 function PlayerSelect:incrementSel() self.sel = (self.sel + 1 < 13) and (self.sel + 1) or 1 end

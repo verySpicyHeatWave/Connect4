@@ -215,6 +215,11 @@ function PlayState:easyCPUmove()
             self.turnCount = (self.turnCount % 2) + 1
             break
         end
-    end  
+    end
+end
 
+
+
+function PlayState:resize(w, h)
+    push:resize(w, h)
 end

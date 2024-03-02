@@ -68,23 +68,15 @@ end
 
 
 function MainMenu:update(dt)
-    -- self.msx = love.mouse.getX()
-    -- self.msy = love.mouse.getY()
-    -- lblupperbound = WINDOW_WIDTH / 2 + self.labelWidth / 2
-    -- lbllowerbound = WINDOW_WIDTH / 2 - self.labelWidth / 2
-    -- if  (self.msx >= lblupperbound or self.msx <= lbllowerbound) then return end
-    -- for i=0,2,1 do
-    --     if (self.msy > self.options[i]['y'] and self.msy < self.options[i]['y'] + self.labelHeight) then
-    --         self.options[i]['color'] = {255,0,0,255}
-    --         self.options[i]['sel'] = true
-    --     else
-    --         self.options[i]['color'] = {255,255,255,255}
-    --         self.options[i]['sel'] = false
-    --     end
-    -- end
-
+    self.msx, self.msy = love.mouse.getPosition()
+    self.msx, self.msy = push:toGame(self.msx, self.msy)
+    if (self.msx == nil or self.msy == nil) then return end
+    
+    lblupperbound = WINDOW_WIDTH / 2 + self.labelWidth / 2
+    lbllowerbound = WINDOW_WIDTH / 2 - self.labelWidth / 2
+    if  (self.msx >= lblupperbound or self.msx <= lbllowerbound) then return end
     for i=0,2,1 do
-        if (i == keyselect) then
+        if (self.msy > self.options[i]['y'] and self.msy < self.options[i]['y'] + self.labelHeight) then
             self.options[i]['color'] = {255,0,0,255}
             self.options[i]['sel'] = true
         else
@@ -92,6 +84,16 @@ function MainMenu:update(dt)
             self.options[i]['sel'] = false
         end
     end
+
+    -- for i=0,2,1 do
+    --     if (i == keyselect) then
+    --         self.options[i]['color'] = {255,0,0,255}
+    --         self.options[i]['sel'] = true
+    --     else
+    --         self.options[i]['color'] = {255,255,255,255}
+    --         self.options[i]['sel'] = false
+    --     end
+    -- end
 end
 
 
@@ -117,16 +119,16 @@ end
 
 
 function MainMenu:mousepressed(x, y, button)
-    -- selection = -1
-    -- for i=0,2,1 do
-    --     if (self.options[i]['sel']) then 
-    --         selection = i 
-    --     end
-    -- end
+    selection = -1
+    for i=0,2,1 do
+        if (self.options[i]['sel']) then 
+            selection = i 
+        end
+    end
 
-    -- if (selection == 1) then
-    --     gameState:change('select')
-    -- end
+    if (selection == 1) then
+        gameState:change('select')
+    end
 end
 
 
@@ -143,6 +145,12 @@ function MainMenu:keypressed(key)
     --if down arrow key, move cursor selector down
     --if enter key, choose selected option
 
+end
+
+
+
+function MainMenu:resize(w, h)
+    push:resize(w, h)
 end
 
 

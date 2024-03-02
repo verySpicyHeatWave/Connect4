@@ -24,7 +24,8 @@ colors = {
     [ 9] = {'blue', 255},
     [10] = {'purple', 8388863},
     [11] = {'magenta', 16711935},
-    [12] = {'pink', 16711808}
+    [12] = {'pink', 16711808},
+    [13] = {'white', 16777215}
 }
 
 --[[
@@ -60,9 +61,12 @@ function love.load()
 end
 
 
+
 function love.resize(w, h)
-    push:resize(w, h)
+    gameState:resize(w, h)
 end
+
+
 
 function love.update(dt)
     gameState:update(dt)
