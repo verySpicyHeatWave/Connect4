@@ -47,7 +47,8 @@ function love.load()
     gameState = StateMachine {        
         ['play'] = function() return PlayState() end,
         ['menu'] = function() return MainMenu() end,
-        ['select'] = function() return PlayerSelect() end
+        ['select'] = function() return PlayerSelect() end,
+        ['difficulty'] = function() return DifficultySelect() end
     }
     gameState:change('menu')
 end

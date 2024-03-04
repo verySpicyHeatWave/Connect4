@@ -49,6 +49,7 @@ function PlayerSelect:update(dt)
         self.options[i]:checkIfSelected(msx, msy)
     end
     if (self.cpuplayer and playernumber == 2) then
+        playername = 'CPU'
         self.playerName:setText('CPU')
     end
 end
@@ -83,16 +84,13 @@ end
 
 
 function PlayerSelect:keypressed(key)
-    if (key == 'left') then
-        self:decrementSel()
-    elseif (key == 'right') then
-        self:incrementSel()
-    elseif (key == 'return') then
-        self:lockInPlayer()
-    end
+    if (key == 'left') then self:decrementSel() end
+    if (key == 'right') then self:incrementSel() end
+    if (key == 'return') then self:lockInPlayer() end
     
     if (string.len(key) == 1) then
         if (not playername) then playername = "" end
+        if (playernumber == 2 and self.cpuplayer) then return end
         playername = playername .. key
         self.playerName:setText(playername)
     end
@@ -144,7 +142,11 @@ function PlayerSelect:lockInPlayer()
     playernumber = playernumber + 1
     if (playernumber > 2) then 
         playerlist[2][3] = self.cpuplayer
-        gameState:change('play', playerlist) 
+        if (self.cpuplayer) then
+            gameState:change('difficulty', playerlist)
+        else
+            gameState:change('play', playerlist) 
+        end
     end
     playername = false
     self:incrementSel()

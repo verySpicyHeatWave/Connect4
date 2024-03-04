@@ -3,6 +3,7 @@ PlayState = Class{__includes = BaseState}
 function PlayState:enter(enterParams)
     self.players = enterParams
     self.cpuplayer = self.players[2][3]
+    self.CPU = CPUPlayer(self.cpuplayer)
 end
 
 
@@ -14,6 +15,10 @@ function PlayState:init()
     self.winner = 'none'
     self.cpuplayer = false
     self.cpuwaittimer = 0
+
+    self.CPU = ""
+
+
     
     for i = 1, COLS, 1 do
         self.grid[i] = {}
@@ -35,14 +40,13 @@ function PlayState:update(dt)
         if (self:gameOver()) then break end
     end
 
-    if (self.cpuplayer and self.turnCount == 2) then
-        self.cpuwaittimer = self.cpuwaittimer + dt
-        if (self.cpuwaittimer >= 1.3) then
-            self:easyCPUmove()
-            self.cpuwaittimer = 0
+    if (self.CPU:isActive() and self.turnCount == 2) then
+        if (self.CPU:timeToMove(dt)) then
+            local cpumove = self.CPU:nextMove()
+            self:executeCPUmove(cpumove)
         end
     else
-        self.cpuwaittimer = 0   
+        self.CPU:resetTimer()   
     end
 end
 
@@ -72,21 +76,16 @@ end
 
 function PlayState:mousepressed(x, y, button)
     if (self:gameOver()) then return end
-    if (self.cpuplayer and self.turnCount == 2) then return end
+    if (self.CPU:isActive() and self.turnCount == 2) then return end
     for i=1, COLS, 1 do
-        for j=1, ROWS, 1 do
+        for j=ROWS, 1, -1 do
             if (self.grid[i][j]:isFalling()) then return end
         end
     end
-    xpos = x - CELL_SIZE / 4
-    xpos = xpos - (xpos % CELL_SIZE)
-    xpos = xpos / CELL_SIZE + 1
-    xpos = (xpos > 1) and xpos or 1
-    xpos = (xpos < COLS) and xpos or COLS
-    if (xpos > COLS) then xpos = COLS end
+    local xcol = self:getMouseColumn(x)
     for j = 6, 1, -1 do
-        if (not self.grid[xpos][j]:isFilled()) then
-            self.grid[xpos][j]:fill(self.players[self.turnCount])
+        if (not self.grid[xcol][j]:isFilled()) then
+            self.grid[xcol][j]:fill(self.players[self.turnCount])
             self.turnCount = (self.turnCount % 2) + 1
             break
         end
@@ -206,8 +205,7 @@ end
 
 
 
-function PlayState:easyCPUmove()
-    i = math.random(1, 7)
+function PlayState:executeCPUmove(i)
     for j = 6, 1, -1 do
         if (not self.grid[i][j]:isFilled()) then
             self.grid[i][j]:fill(self.players[self.turnCount])
@@ -221,4 +219,15 @@ end
 
 function PlayState:resize(w, h)
     push:resize(w, h)
+end
+
+
+
+function PlayState:getMouseColumn(x)
+    local xpos = x - CELL_SIZE / 4
+    xpos = xpos - (xpos % CELL_SIZE)
+    xpos = xpos / CELL_SIZE + 1
+    xpos = (xpos > 1) and xpos or 1
+    xpos = (xpos < COLS) and xpos or COLS
+    return xpos
 end

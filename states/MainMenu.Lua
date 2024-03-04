@@ -38,10 +38,10 @@ end
 
 
 function MainMenu:mousepressed(x, y, button)
-    for i=0,2,1 do
-        if (self.options[i]:isSelected()) then 
-            gameState:change(self.options[i]:getActionString())
-        end
+    if (self.options[0]:isSelected()) then 
+        gameState:change(self.options[0]:getActionString(), true)
+    elseif (self.options[1]:isSelected()) then 
+        gameState:change(self.options[1]:getActionString(), false)
     end
 end
 
