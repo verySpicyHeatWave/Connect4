@@ -2,8 +2,7 @@ PlayState = Class{__includes = BaseState}
 
 function PlayState:enter(enterParams)
     self.players = enterParams
-    self.cpuplayer = self.players[2][3]
-    self.CPU = CPUPlayer(self.cpuplayer)
+    self.CPU = CPUPlayer(self.players[2][3], self.players)
 end
 
 
@@ -13,13 +12,7 @@ function PlayState:init()
     self.turnCount = 1
     self.gameCount = 1
     self.winner = 'none'
-    self.cpuplayer = false
-    self.cpuwaittimer = 0
-
-    self.CPU = ""
-
-
-    
+    self.CPU = 0
     for i = 1, COLS, 1 do
         self.grid[i] = {}
         for j = 1, ROWS, 1 do
@@ -42,7 +35,8 @@ function PlayState:update(dt)
 
     if (self.CPU:isActive() and self.turnCount == 2) then
         if (self.CPU:timeToMove(dt)) then
-            local cpumove = self.CPU:nextMove()
+            local tGrid = self:makeAShallowGrid()
+            local cpumove = self.CPU:nextMove(tGrid)
             self:executeCPUmove(cpumove)
         end
     else
@@ -137,8 +131,8 @@ end
 
 
 
-function PlayState:verticalCheck(i, j, player)
-    if (self.grid[i][j].claimedBy == 'none') then return 0 end
+function PlayState:verticalCheck(i, j)
+    if (not self.grid[i][j]:isFilled()) then return 0 end
     count = 1
     for y = 1, 3, 1 do
         if (self.grid[i][j].claimedBy == self.grid[i][j + y].claimedBy) then
@@ -155,8 +149,8 @@ end
 
 
 
-function PlayState:posDiagonalCheck(i, j, player)
-    if (self.grid[i][j].claimedBy == 'none') then return 0 end
+function PlayState:posDiagonalCheck(i, j)
+    if (not self.grid[i][j]:isFilled()) then return 0 end
     count = 1
     for diag = 1, 3, 1 do
         if (self.grid[i][j].claimedBy == self.grid[i - diag][j + diag].claimedBy) then
@@ -173,8 +167,8 @@ end
 
 
 
-function PlayState:negDiagonalCheck(i, j, player)
-    if (self.grid[i][j].claimedBy == 'none') then return 0 end
+function PlayState:negDiagonalCheck(i, j)
+    if (not self.grid[i][j]:isFilled()) then return 0 end
     count = 1
     for diag = 1, 3, 1 do
         if (self.grid[i][j].claimedBy == self.grid[i + diag][j + diag].claimedBy) then
@@ -230,4 +224,18 @@ function PlayState:getMouseColumn(x)
     xpos = (xpos > 1) and xpos or 1
     xpos = (xpos < COLS) and xpos or COLS
     return xpos
+end
+
+
+
+function PlayState:makeAShallowGrid()
+    local tGrid = {}
+    for i = 1, COLS, 1 do
+        tGrid[i] = {}
+        for j = 1, ROWS, 1 do
+            tGrid[i][j] = self.grid.claimedBy
+        end
+    end
+
+    return tGrid
 end
